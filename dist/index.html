@@ -1,0 +1,28 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Connly SDK Test</title>
+</head>
+<body>
+  <h1>Connly SDK Test Page</h1>
+
+  
+  <!-- Include your Connly SDK -->
+  <script src="connly.min.js"></script>
+    <script>
+      
+        // Initialize Connly SDK
+        const connly = new ConnlySDK('http://localhost:2023','eyJhb');
+
+        connly.onConnect((data) => {
+          console.log(data);
+        });
+
+        connly.onError((error) => {
+          console.log(error);
+        });
+    </script>
+</body>
+</html>
