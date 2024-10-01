@@ -1,7 +1,7 @@
 {
   "name": "connly",
-  "version": "1.0.0",
-  "description": "ConnlyAI Chat SDK",
+  "version": "1.0.1",
+  "description": "Connly AI Chat SDK",
   "main": "lib/index.js",
   "directories": {
     "lib": "lib"

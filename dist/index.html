@@ -20,6 +20,16 @@
           console.log(data);
         });
 
+        connly.onDisconnect((data) => {
+          console.log(data);
+        });
+
+        connly.onMessage((data) => {
+          console.log(data);
+        });
+
+        connly
+
         connly.onError((error) => {
           console.log(error);
         });
