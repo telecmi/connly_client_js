@@ -313,6 +313,8 @@ connly.disconnect();
 
 This will terminate the current socket connection and ensure the system is ready for reconnection if needed.
 
+
+
 ## API Reference
 
 ### Constructor
@@ -331,11 +333,154 @@ new Connly(serverUrl, token)
 - **`connect()`**: Establishes a new connection. If an existing connection is present, it will first disconnect.
 - **`onConnect(callback)`**
   - **`callback`**: Function called when the connection is established.
+  - Example:
+    ```javascript
+    connly.onConnect(({ isConnected }) => {
+      console.log('Connected:', isConnected);
+    });
+    ```
 - **`onDisconnect(callback)`**
   - **`callback`**: Function called when the connection is lost.
+  - Example:
+    ```javascript
+    connly.onDisconnect(({ isConnected }) => {
+      console.log('Disconnected:', isConnected);
+    });
+    ```
 - **`disconnect()`**: Manually disconnects from the server.
+  - Example:
+    ```javascript
+    connly.disconnect();
+    ```
 
 #### User Status Methods
 
 - **`setStatus(status)`**
-  - **`status`**: String
+  - **`status`**: String representing the user's status (e.g., 'online', 'offline').
+  - Example:
+    ```javascript
+    connly.setStatus('online');
+    ```
+- **`onStatus(callback)`**
+  - **`callback`**: Function called when a status update is received.
+  - Example:
+    ```javascript
+    connly.onStatus((data) => {
+      console.log('User status updated:', data);
+    });
+    ```
+
+#### Messaging Methods
+
+- **`sendMessage(messageContent, callback)`**
+  - **`messageContent`**: Object containing message details. Must include fields like `to` (recipient user ID) and `message` (message text).
+  - **`callback`**: Optional function called upon acknowledgment.
+  - Example:
+    ```javascript
+    const messageContent = {
+      to: 'recipientUserId',
+      message: 'Hello, how are you?',
+    };
+
+    connly.sendMessage(messageContent, (ack) => {
+      console.log('Message sent acknowledgment:', ack);
+    });
+    ```
+- **`onMessage(callback)`**
+  - **`callback`**: Function called when a message is received.
+  - Example:
+    ```javascript
+    connly.onMessage((data) => {
+      console.log('Received message:', data);
+    });
+    ```
+
+#### Typing Status Methods
+
+- **`sendTypingStatus(details)`**
+  - **`details`**: Object containing typing status information. Must include `to` (recipient user ID) and `isTyping` (boolean).
+  - Example:
+    ```javascript
+    const typingDetails = {
+      to: 'recipientUserId',
+      isTyping: true,
+    };
+
+    connly.sendTypingStatus(typingDetails);
+    ```
+- **`onTypingStatus(callback)`**
+  - **`callback`**: Function called when typing status is received.
+  - Example:
+    ```javascript
+    connly.onTypingStatus((data) => {
+      console.log('Typing status:', data);
+    });
+    ```
+
+#### Read Receipt Methods
+
+- **`sendReadReceipt(details)`**
+  - **`details`**: Object containing read receipt details, such as `messageId` and `readerId`.
+  - Example:
+    ```javascript
+    const readReceiptDetails = {
+      messageId: 'messageId123',
+      readerId: 'yourUserId',
+    };
+
+    connly.sendReadReceipt(readReceiptDetails);
+    ```
+- **`onReadReceipt(callback)`**
+  - **`callback`**: Function called when a read receipt is received.
+  - Example:
+    ```javascript
+    connly.onReadReceipt((data) => {
+      console.log('Read receipt received:', data);
+    });
+    ```
+
+#### Delivery Receipt Methods
+
+- **`onDeliveryReceipt(callback)`**
+  - **`callback`**: Function called when a delivery receipt is received.
+  - Example:
+    ```javascript
+    connly.onDeliveryReceipt((data) => {
+      console.log('Delivery receipt received:', data);
+    });
+    ```
+
+#### Call Action Methods
+
+- **`onCallAction(callback)`**
+  - **`callback`**: Function called when a call action (like a start or end of a call) is received.
+  - Example:
+    ```javascript
+    connly.onCallAction((data) => {
+      console.log('Call action received:', data);
+    });
+    ```
+
+#### Presence Methods
+
+- **`onPresence(callback)`**
+  - **`callback`**: Function called when presence information (e.g., user is online/offline) is received.
+  - Example:
+    ```javascript
+    connly.onPresence((data) => {
+      console.log('User presence updated:', data);
+    });
+    ```
+
+#### Error Handling
+
+- **`onError(callback)`**
+  - **`callback`**: Function called when an error occurs.
+  - Example:
+    ```javascript
+    connly.onError((error) => {
+      console.error('An error occurred:', error);
+    });
+    ```
+
+---
