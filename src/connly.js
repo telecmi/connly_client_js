@@ -2,15 +2,25 @@ import io from 'socket.io-client';
 
 export default class ConnlySDK {
     constructor( serverUrl, token ) {
+        this.serverUrl = serverUrl;
+        this.token = token;
+        this.isConnected = false;
+        this.eventHandlers = {};
+    }
 
-        // Initialize Socket.IO client internally
-        this.socket = io( serverUrl, {
+    // Initialize a new connection
+    connect () {
+        // Check if socket is already connected, if so, disconnect it first
+        if ( this.socket && this.isConnected ) {
+            this.disconnect();
+        }
+
+        // Initialize a new socket connection
+        this.socket = io( this.serverUrl, {
             query: {
-                token: token,
+                token: this.token,
             },
         } );
-
-        this.isConnected = false;
 
         // Handle connection events
         this.socket.on( 'connect', () => {
@@ -23,8 +33,14 @@ export default class ConnlySDK {
             if ( this.onDisconnectCallback ) this.onDisconnectCallback( { isConnected: this.isConnected } );
         } );
 
-        // Optionally store event handlers
-        this.eventHandlers = {};
+        // Error handling
+        this.socket.on( 'connect_error', ( error ) => {
+            if ( this.onErrorCallback ) this.onErrorCallback( error );
+        } );
+
+        this.socket.on( 'error', ( error ) => {
+            if ( this.onErrorCallback ) this.onErrorCallback( error );
+        } );
     }
 
     // Connection Event Handlers
@@ -85,38 +101,31 @@ export default class ConnlySDK {
     sendTypingStatus ( details ) {
         if ( !this.isConnected ) return;
         this.socket.emit( 'connly_type_status', details );
-
     }
 
-    // Typing Status Methods
     onTypingStatus ( callback ) {
         this.socket.on( 'connly_on_type_status', ( data ) => {
             callback( data );
         } );
     }
 
+    // Call Action Methods
     onCallAction ( callback ) {
         this.socket.on( 'connly_on_call_status', ( data ) => {
             callback( data );
         } );
     }
 
-    // Call Action Methods
+    // Presence Methods
     onPresence ( callback ) {
-        this.socket.on( 'connly_user_status', ( data ) => {
+        this.socket.on( 'connly_users_status', ( data ) => {
             callback( data );
         } );
     }
 
     // Error Handling
     onError ( callback ) {
-        this.socket.on( 'connect_error', ( error ) => {
-            callback( error );
-        } );
-
-        this.socket.on( 'error', ( error ) => {
-            callback( error );
-        } );
+        this.onErrorCallback = callback;
     }
 
     // Disconnect Method
@@ -127,5 +136,3 @@ export default class ConnlySDK {
         }
     }
 }
-
-

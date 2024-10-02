@@ -16,6 +16,8 @@
         // Initialize Connly SDK
         const connly = new ConnlySDK('http://localhost:2023','eyJhb');
 
+        connly.connect();
+
         connly.onConnect((data) => {
           console.log(data);
         });
