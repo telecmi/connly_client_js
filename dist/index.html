@@ -14,12 +14,20 @@
     <script>
       
         // Initialize Connly SDK
-        const connly = new ConnlySDK('http://localhost:2023','eyJhb');
+        const connly = new ConnlySDK('http://localhost:2023','');
 
         connly.connect();
+       globalThis.connly = connly;
 
+        
         connly.onConnect((data) => {
           console.log(data);
+
+          setTimeout(() => {
+            connly.sendReaction({reaction_type: 'like', message_id: '9b09aedd-3212-41eb-aed3-cb2b41eba4f4',remove:true},(data) => {
+              console.log(data);
+            });
+          }, 2000);
         });
 
         connly.onDisconnect((data) => {
@@ -30,7 +38,7 @@
           console.log(data);
         });
 
-        connly
+       
 
         connly.onError((error) => {
           console.log(error);

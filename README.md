@@ -395,6 +395,45 @@ new Connly(serverUrl, token)
     });
     ```
 
+Here is the **reaction-related method** in the README format, as requested:
+
+---
+
+### Reaction Methods
+
+#### **sendReaction(reaction, callback)**
+Send a reaction to a specific message. This could be an emoji or any other type of reaction (e.g., like).
+
+- **Parameters**:
+  - `reaction`: An object containing the reaction details such as `message_id`, `user_id`, `reaction_type`, `content`, and `service`.
+  - `callback`: An optional function that will be called when the reaction is acknowledged.
+
+##### Example:
+```javascript
+const reaction = {
+  message_id: "123e4567-e89b-12d3-a456-426614174000",
+  reaction_type:  "👍"
+};
+
+connly.sendReaction(reaction, (ack) => {
+  console.log('Reaction sent acknowledgment:', ack);
+});
+```
+
+#### **onReaction(callback)**
+Listen for incoming reactions on messages. This method triggers the `callback` whenever a new reaction is received.
+
+- **Parameters**:
+  - `callback`: A function that is called with the reaction data when a reaction is received.
+
+##### Example:
+```javascript
+connly.onReaction((data) => {
+  console.log('Reaction received:', data);
+});
+```
+
+
 #### Typing Status Methods
 
 - **`sendTypingStatus(details)`**

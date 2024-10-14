@@ -6,6 +6,7 @@ export default class ConnlySDK {
         this.token = token;
         this.isConnected = false;
         this.eventHandlers = {};
+        this.pingInterval = null;
     }
 
     // Initialize a new connection
@@ -26,11 +27,25 @@ export default class ConnlySDK {
         this.socket.on( 'connect', () => {
             this.isConnected = true;
             if ( this.onConnectCallback ) this.onConnectCallback( { isConnected: this.isConnected } );
+
+            if ( this.pingInterval ) clearInterval( this.pingInterval );
+            this.pingInterval = setInterval( () => {
+                if ( this.isConnected ) {
+                    console.log( 'ping' );
+                    this.socket.emit( 'connly_ping', { status: 'ping' } ); // Send ping to the server
+                }
+            }, 300000 );
         } );
 
         this.socket.on( 'disconnect', () => {
             this.isConnected = false;
             if ( this.onDisconnectCallback ) this.onDisconnectCallback( { isConnected: this.isConnected } );
+            // Stop pinging when disconnected
+            if ( this.pingInterval ) {
+                clearInterval( this.pingInterval );
+                console.log( 'ping interval cleared' );
+                this.pingInterval = null; // Ensure pingInterval is reset
+            }
         } );
 
         // Error handling
@@ -77,6 +92,22 @@ export default class ConnlySDK {
             callback( data );
         } );
     }
+
+
+    //Send Ractions
+    sendReaction ( reaction, callback ) {
+        if ( !this.isConnected ) return;
+        this.socket.emit( 'connly_reaction', reaction, ( data ) => {
+            if ( callback ) callback( data );
+        } );
+    }
+
+    onReaction ( callback ) {
+        this.socket.on( 'connly_on_reaction', ( data ) => {
+            callback( data );
+        } );
+    }
+
 
     // Message Read Receipt Methods
     sendReadReceipt ( details ) {
