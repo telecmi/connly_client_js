@@ -154,6 +154,14 @@ export default class ConnlySDK {
         } );
     }
 
+
+    // Channel and user changes 
+    onChange ( callback ) {
+        this.socket.on( 'connly_user_channel_changes', ( data ) => {
+            callback( data );
+        } );
+    }
+
     // Error Handling
     onError ( callback ) {
         this.onErrorCallback = callback;
