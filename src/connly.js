@@ -110,9 +110,11 @@ export default class ConnlySDK {
 
 
     // Message Read Receipt Methods
-    sendReadReceipt ( details ) {
+    sendReadReceipt ( details, callback ) {
         if ( !this.isConnected ) return;
-        this.socket.emit( 'connly_read_receipt', details );
+        this.socket.emit( 'connly_read_receipt', details, ( data ) => {
+            if ( callback ) callback( data );
+        } );
     }
 
     onReadReceipt ( callback ) {
