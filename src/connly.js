@@ -48,6 +48,14 @@ export default class ConnlySDK {
             }
         } );
 
+        // Join team
+        this.socket.on( 'connly_join_channel', ( data ) => {
+            if ( data?.channel_id ) {
+                this.socket.emit( 'connly_on_join_channel', { channel_id: data.channel_id } );
+            }
+        } );
+
+
         // Error handling
         this.socket.on( 'connect_error', ( error ) => {
             if ( this.onErrorCallback ) this.onErrorCallback( error );
