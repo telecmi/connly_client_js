@@ -55,6 +55,14 @@ export default class ConnlySDK {
             }
         } );
 
+        // Join team
+        this.socket.on( 'connly_leave_channel', ( data ) => {
+            if ( data?.channel_id ) {
+                this.socket.emit( 'connly_on_leave_channel', { channel_id: data.channel_id } );
+            }
+        } );
+
+
 
         // Error handling
         this.socket.on( 'connect_error', ( error ) => {
